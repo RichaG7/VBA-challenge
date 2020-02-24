@@ -1,0 +1,125 @@
+' Steps:
+' ----------------------------------------------------------------------------
+' Part I: Add a sheet
+Sub Ticker()
+
+' Part II: Loop through every worksheet and select the ticker contents.
+   ' Loop through all sheets
+    For Each ws In Worksheets
+        Worksheets(ws.Name).Activate
+  
+  ' Set an initial variable for holding the ticker label
+  Dim Ticker_Label As String
+  
+  ' Set an initial variable for holding the total change per ticker
+  Dim Yearly_Change As Double
+  Yearly_Change = 0
+  
+  ' Set an initial variable for holding the yearly change per ticker
+  Dim Percent_Change As Double
+  Percent_Change = 0
+  
+  ' Set an initial variable for holding the total stock value per ticker
+  Dim Total_Stock_Value As Long
+  Total_Stock_Volume = 0
+  
+  Dim Max_Increase As Long
+  Dim Max_Decrease As Long
+  Dim Max_Volume As Long
+
+  Dim Summary_Row As Integer
+  Summary_Row = 2
+ 
+ Dim Opening_value As Double
+ Opening_value = Cells(2, 3).Value
+ 
+  ' Name the headers
+  ActiveSheet.Range("I1").Value = "Ticker"
+  ActiveSheet.Range("J1").Value = "Yearly Change"
+  ActiveSheet.Range("K1").Value = "Percent Change"
+  ActiveSheet.Range("L1").Value = "Total Stock Volume"
+     
+  'ActiveSheet.UsedRange.Rows.Count
+
+  ' Loop through all tickers
+  For i = 2 To ActiveSheet.UsedRange.Rows.Count
+    
+    ' Check if we are still within the same credit card brand, if it is not...
+    If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+      
+      ' Set the ticker label
+      Ticker_Label = Cells(i, 1).Value
+      
+      ' Add to the Total Stock Volume
+      Total_Stock_Volume = Total_Stock_Volume + Cells(i, 7).Value
+      
+      'Calculate the yearly change
+      Yearly_Change = Cells(i, 6).Value - Opening_value
+      
+      'Calculate the percent change
+      Percent_Change = Yearly_Change / Opening_value
+      
+      ' Print the Ticker Label in the combined sheet
+      ActiveSheet.Range("I" & Summary_Row).Value = Ticker_Label
+      
+      ' Print the Yearly Change to the combined sheet
+      ActiveSheet.Range("J" & Summary_Row).Value = Yearly_Change
+        If Yearly_Change < 0 Then
+            ActiveSheet.Range("J" & Summary_Row).Interior.ColorIndex = 3
+        Else: ActiveSheet.Range("J" & Summary_Row).Interior.ColorIndex = 4
+        End If
+      ' Print the Total Stock Volume to the combined sheet
+      ActiveSheet.Range("K" & Summary_Row).Value = Percent_Change
+      ActiveSheet.Range("K" & Summary_Row).Style = "Percent"
+       
+      ' Print the Total Stock Volume to the combined sheet
+      ActiveSheet.Range("L" & Summary_Row).Value = Total_Stock_Volume
+        
+      ' Add one to the combined sheet row
+      Summary_Row = Summary_Row + 1
+      
+      ' Reset the Brand Total
+      Total_Stock_Volume = 0
+    
+    ' If the cell immediately following a row is the same brand...
+    Else
+      ' Add to the Brand Total
+      Total_Stock_Volume = Total_Stock_Volume + Cells(i, 7).Value
+    
+    End If
+  
+  Next i
+
+'Name summary table
+Cells(2, 15).Value = "Greatest % Increase"
+Cells(3, 15).Value = "Greatest % Decrease"
+Cells(4, 15).Value = "Greatest Total Volume"
+Cells(1, 16).Value = "Ticker"
+Cells(1, 17).Value = "Value"
+
+'Select values for summary table
+Max_Increase = Application.WorksheetFunction.Max(Range("K:K"))
+Max_Decrease = Application.WorksheetFunction.Min(Range("K:K"))
+Max_Volume = Application.WorksheetFunction.Min(Range("L:L"))
+
+    For i = 2 To ActiveSheet.Cells(Rows.Count, "K").End(xlUp).Row
+        If Cells(i, 11).Value = Max_Increase Then
+            Cells(2, 16).Value = Cells(i, 10).Value
+            Cells(2, 17).Value = Cells(i, 11).Value
+            Cells(2, 17).Style = "Percent"
+        ElseIf Cells(i, 11).Value = Max_Decrease Then
+            Cells(3, 16).Value = Cells(i, 10).Value
+            Cells(3, 17).Value = Cells(i, 11).Value
+            Cells(3, 17).Style = "Percent"
+        ElseIf Cells(i, 12).Value = Max_Volume Then
+            Cells(4, 16).Value = Cells(i, 10).Value
+            Cells(4, 17).Value = Cells(i, 12).Value
+        End If
+    Next i
+
+ActiveSheet.Columns("A:Q").AutoFit
+
+Next ws
+
+End Sub
+
