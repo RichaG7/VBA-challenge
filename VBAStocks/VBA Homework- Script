@@ -104,15 +104,15 @@ Max_Volume = Application.WorksheetFunction.Min(Range("L:L"))
 
     For i = 2 To ActiveSheet.Cells(Rows.Count, "K").End(xlUp).Row
         If Cells(i, 11).Value = Max_Increase Then
-            Cells(2, 16).Value = Cells(i, 10).Value
+            Cells(2, 16).Value = Cells(i, 9).Value
             Cells(2, 17).Value = Cells(i, 11).Value
             Cells(2, 17).Style = "Percent"
         ElseIf Cells(i, 11).Value = Max_Decrease Then
-            Cells(3, 16).Value = Cells(i, 10).Value
+            Cells(3, 16).Value = Cells(i, 9).Value
             Cells(3, 17).Value = Cells(i, 11).Value
             Cells(3, 17).Style = "Percent"
         ElseIf Cells(i, 12).Value = Max_Volume Then
-            Cells(4, 16).Value = Cells(i, 10).Value
+            Cells(4, 16).Value = Cells(i, 9).Value
             Cells(4, 17).Value = Cells(i, 12).Value
         End If
     Next i
