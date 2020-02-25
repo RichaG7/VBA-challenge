@@ -23,9 +23,9 @@ Sub Ticker()
   Dim Total_Stock_Value As Long
   Total_Stock_Volume = 0
   
-  Dim Max_Increase As Long
-  Dim Max_Decrease As Long
-  Dim Max_Volume As Long
+  Dim Max_Increase As Double
+  Dim Max_Decrease As Double
+  Dim Max_Volume As Variant
 
   Dim Summary_Row As Integer
   Summary_Row = 2
@@ -100,20 +100,25 @@ Cells(1, 17).Value = "Value"
 'Select values for summary table
 Max_Increase = Application.WorksheetFunction.Max(Range("K:K"))
 Max_Decrease = Application.WorksheetFunction.Min(Range("K:K"))
-Max_Volume = Application.WorksheetFunction.Min(Range("L:L"))
+Max_Volume = Application.WorksheetFunction.Max(Range("L:L"))
 
     For i = 2 To ActiveSheet.Cells(Rows.Count, "K").End(xlUp).Row
         If Cells(i, 11).Value = Max_Increase Then
             Cells(2, 16).Value = Cells(i, 9).Value
             Cells(2, 17).Value = Cells(i, 11).Value
             Cells(2, 17).Style = "Percent"
-        ElseIf Cells(i, 11).Value = Max_Decrease Then
+        Else
+        End If
+        If Cells(i, 11).Value = Max_Decrease Then
             Cells(3, 16).Value = Cells(i, 9).Value
             Cells(3, 17).Value = Cells(i, 11).Value
             Cells(3, 17).Style = "Percent"
-        ElseIf Cells(i, 12).Value = Max_Volume Then
+        Else
+        End If
+        If Cells(i, 12).Value = Max_Volume Then
             Cells(4, 16).Value = Cells(i, 9).Value
             Cells(4, 17).Value = Cells(i, 12).Value
+        Else
         End If
     Next i
 
